@@ -1,0 +1,65 @@
+containers:
+    # This is where to define the path to your singularity container 
+    # image
+    wrapper: /path/to/kilmer.sif
+
+inputs:
+    # This is where to define your input datasets 
+    # directory. An example subject directory should 
+    # look like the following
+    #
+    # datasets
+    # └── ASDF
+    #     ├── configs
+    #     │   ├── cluster_requests.csv
+    #     │   └── tasktype_consolidated.csv
+    #     ├── mocks
+    #     │   └── freesurfer.tar.gz
+    #     ├── README.md
+    #     └── subject_lists
+    #         ├── ASDF.cfg
+    #         └── scanlist_ASDF.csv
+    datasets: /path/to/datasets
+
+outputs:
+    # This is where to define where all 
+    # iProc branches will be installed
+    branches: /path/to/branches
+
+    # This is where to define where all 
+    # iProc output will be saved
+    results: /path/to/results
+
+# This is where to define your "left" branch
+left:
+    url: https://github.com/harvard-nrg/iProc
+    branch: main
+
+# This is where to define your "right" branch
+right:
+    url: https://github.com/harvard-nrg/iProc
+    branch: develop
+
+iproc:
+    # These are the iProc stages you want to run 
+    # during kilmer's "launch" mode
+    stages:
+        - setup
+        - bet
+        - unwarp_motioncorrect_align
+        - T1_warp_and_mask
+        - combine_and_apply_warp
+        - filter_and_project
+
+validation:
+    nifti:
+        # This is where to define all directories 
+        # and file patterns to ignore when comparing 
+        # NIfTI files
+        exclude:
+            - .*/scratch/.*
+            - .*/time_point_\d+.nii.gz$
+            - .*/T1_TARG_WARP_\d+.nii.gz$
+            - .*/T1_TARG_FILE_\d+.nii.gz$
+            - .*/MNI_TARG_FILE_\d+.nii.gz$
+

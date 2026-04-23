@@ -1,0 +1,25 @@
+[build-system]
+requires = ["hatchling >= 1.26"]
+build-backend = "hatchling.build"
+
+[project]
+name = "kilmer"
+version = "v0.0.1"
+dependencies = [
+    "pyyaml",
+    "sortedcontainers"
+]
+requires-python = ">= 3.11"
+
+[project.scripts]
+kilmer = "kilmer.cli:main"
+
+[project.optional-dependencies]
+docs = [
+    "mkdocs",
+    "mkdocs-material"
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/kilmer"]
+

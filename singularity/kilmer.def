@@ -1,0 +1,32 @@
+Bootstrap: docker
+From: rockylinux:8
+
+%post
+    dnf install -y epel-release
+    dnf config-manager --set-enabled powertools
+    dnf install -y \
+        which \
+        python3.11 \
+        Lmod \
+        procps-ng \
+        tcsh \
+        libXt \
+        libXft \
+        libXp \
+        libXpm \
+        libpng12 \
+        git \
+        bc \
+        rsync \
+        libtiff \
+        libwebp \
+        pango \
+        librsvg2 \
+        libtool-ltdl \
+        libgomp \
+        urw-base35-fonts
+
+%runscript
+    source .venv/bin/activate
+    source ./modules_rocky8.sh
+    $@
