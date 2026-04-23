@@ -26,6 +26,9 @@ From: rockylinux:8
         libgomp \
         urw-base35-fonts
 
+%environment
+    export AFNI_NIFTI_NOEXT=YES
+
 %runscript
     source .venv/bin/activate
     source ./modules_rocky8.sh
