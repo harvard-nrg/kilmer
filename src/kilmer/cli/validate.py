@@ -29,6 +29,10 @@ def validate(args):
     if args.reverse:
         left_dir, right_dir = right_dir, left_dir
 
+    # add subject directory
+    left_dir = left_dir / subject
+    right_dir = right_dir / subject
+
     # compare all nifti files
     differences = dict()
     patterns = args.config['validation']['nifti']['exclude']
