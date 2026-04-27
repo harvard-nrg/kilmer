@@ -5,6 +5,7 @@ import json
 import filecmp
 import logging
 import contextlib
+from tqdm import tqdm
 from pathlib import Path
 from collections import defaultdict
 from sortedcontainers import SortedDict
@@ -40,6 +41,7 @@ def validate(args):
     differences['nifti'] = diff
 
     # save report
+    logger.info(f'saving {args.output_file}')
     with open(args.output_file, 'w') as fo:
         suffix = args.output_file.suffix
         match suffix:
@@ -54,7 +56,11 @@ def compare_niftis(patterns, left_dir, right_dir):
     diffs = SortedDict()
     patterns = [re.compile(x) for x in patterns]
     with contextlib.chdir(left_dir):
-        for left_file in Path().rglob('*.nii.gz'):
+        files = Path().rglob('*.nii.gz')
+        pbar = tqdm(list(files))
+        errors = 0
+        for left_file in pbar:
+            pbar.set_description(f'{errors} errors')
             # exclude any files matching provided patterns
             if exclude(left_file.absolute(), patterns):
                 continue
@@ -67,13 +73,13 @@ def compare_niftis(patterns, left_dir, right_dir):
             mtime = compare_two_niftis(left_file, right_file)
             # using a SortedDict keyed on mtime keeps the files sorted
             if mtime:
+                errors += 1
                 diffs[mtime] = str(left_file), str(right_file)
     return dict(diffs)
 
 def compare_two_niftis(left, right):
     ''' compare two nifti files and return the left file mtime if different '''
     if not nifti.cmp(left, right):
-        logger.warning(f'{left} != {right}')
         mtime = left.stat(follow_symlinks=False).st_mtime
         return mtime
     logger.debug(f'{left} == {right}')

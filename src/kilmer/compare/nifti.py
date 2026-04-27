@@ -42,7 +42,7 @@ def zdiff(a, b):
     ]
     cmds = sp.list2cmdline(cmd)
     logger.debug(f'running {cmds}')
-    returncode = sp.call(cmd)
+    returncode = sp.call(cmd, stdout=sp.DEVNULL)
     if returncode == 0:
         return True
     return False

@@ -6,6 +6,7 @@ build-backend = "hatchling.build"
 name = "kilmer"
 version = "v0.0.1"
 dependencies = [
+    "tqdm",
     "pyyaml",
     "sortedcontainers"
 ]
