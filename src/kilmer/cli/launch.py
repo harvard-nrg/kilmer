@@ -14,12 +14,13 @@ logger = logging.getLogger(__name__)
 def launch(args):
     subject = args.subject
     branch = args.branch
-    url = args.config[branch]['url']
-    branch_name = args.config[branch]['branch']
-    branches = Path(args.config['outputs']['branches'])
-    datasets = Path(args.config['inputs']['datasets'])
-    results = Path(args.config['outputs']['results'])
-    wrapper = Path(args.config['containers']['wrapper'])
+    url = args.config.find_one(f'$.{branch}.url')
+    branch_name = args.config.find_one(f'$.{branch}.branch')
+    branches = Path(args.config.find_one('$.outputs.branches'))
+    datasets = Path(args.config.find_one('$.inputs.datasets'))
+    results = Path(args.config.find_one('$.outputs.results'))
+    wrapper = Path(args.config.find_one('$.containers.wrapper'))
+    stages = args.config.find_one('$.iproc.stages')
 
     swdir = path_with_repo(branches, url, branch_name)
     outdir =  path_with_repo(results, url, branch_name)
@@ -35,7 +36,6 @@ def launch(args):
         mock(datasets, subject, outdir, m)
 
     # run iProc for all specified stages
-    stages = args.config['iproc']['stages']
     for stage in stages:
         # build the iProc command
         cmd,cmdstr = iproc.build_command(cfg, stage=stage)

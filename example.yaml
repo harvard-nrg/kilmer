@@ -1,12 +1,12 @@
 containers:
-    # This is where to define the path to your singularity container 
-    # image
+    # This is where to define the path to your 
+    # singularity container image
     wrapper: /path/to/kilmer.sif
 
 inputs:
     # This is where to define your input datasets 
-    # directory. An example subject directory should 
-    # look like the following
+    # directory. An example subject directory 
+    # should look like the following
     #
     # datasets
     # └── ASDF

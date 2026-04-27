@@ -2,14 +2,13 @@ import re
 import sys
 import yaml
 import json
-import filecmp
 import logging
 import contextlib
 from tqdm import tqdm
 from pathlib import Path
-from collections import defaultdict
 from sortedcontainers import SortedDict
 
+import kilmer.compare.pdf as pdf
 import kilmer.compare.nifti as nifti
 from kilmer.commons import path_with_repo
 
@@ -17,11 +16,11 @@ logger = logging.getLogger(__name__)
 
 def validate(args):
     subject = args.subject
-    results = Path(args.config['outputs']['results'])
-    left_url = args.config['left']['url']
-    left_branch = args.config['left']['branch']
-    right_url = args.config['right']['url']
-    right_branch = args.config['right']['branch']
+    results = Path(args.config.find_one('$.outputs.results'))
+    left_url = args.config.find_one('$.left.url')
+    left_branch = args.config.find_one('$.left.branch')
+    right_url = args.config.find_one('$.right.url')
+    right_branch = args.config.find_one('$.right.branch')
 
     left_dir = path_with_repo(results, left_url, left_branch)
     right_dir = path_with_repo(results, right_url, right_branch)
@@ -34,11 +33,25 @@ def validate(args):
     left_dir = left_dir / subject
     right_dir = right_dir / subject
 
-    # compare all nifti files
     differences = dict()
-    patterns = args.config['validation']['nifti']['exclude']
-    diff = compare_niftis(patterns, left_dir, right_dir)
-    differences['nifti'] = diff
+
+    # compare nifti files
+    validate = args.config.find_one('$.validation.nifti.validate', True)
+    if validate:
+        logger.info('validating all NIfTI files')
+        patterns = args.config.find_one(
+            '$.validation.nifti.exclude',
+            default=list()
+        )
+        diff = compare_niftis(left_dir, right_dir, patterns)
+        differences['nifti'] = diff
+
+    # compare pdf files
+    validate = args.config.find_one('$.validation.pdf.validate', True)
+    if validate:
+        logger.info('validating all PDF files')
+        diff = compare_pdfs(left_dir, right_dir)
+        differences['pdf'] = diff
 
     # save report
     logger.info(f'saving {args.output_file}')
@@ -52,7 +65,26 @@ def validate(args):
             case _:
                 raise Exception(f'unrecognized output file suffix {suffix}')
 
-def compare_niftis(patterns, left_dir, right_dir):
+def compare_pdfs(left_dir, right_dir):
+    diffs = SortedDict()
+    with contextlib.chdir(left_dir):
+        files = Path().rglob('*.pdf')
+        pbar = tqdm(list(files))
+        errors = 0
+        for left_file in pbar:
+            pbar.set_description(f'{errors} errors')
+            right_file = Path(right_dir, left_file)
+            left_file = left_file.absolute()
+            right_file = right_file.absolute()
+            logger.debug(f'comparing {left_file} to {right_file}')
+            # compare left and right nifti files
+            mtime = pdf.cmp(left_file, right_file)
+            if mtime:
+                errors += 1
+                diffs[mtime] = str(left_file), str(right_file)
+    return dict(diffs)
+
+def compare_niftis(left_dir, right_dir, patterns):
     diffs = SortedDict()
     patterns = [re.compile(x) for x in patterns]
     with contextlib.chdir(left_dir):

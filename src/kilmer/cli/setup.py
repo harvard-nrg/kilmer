@@ -3,7 +3,6 @@ import json
 import logging
 from pathlib import Path
 import subprocess as sp
-from collections import namedtuple
 
 from kilmer.git import clone
 from kilmer.venv import venv
@@ -14,11 +13,14 @@ logger = logging.getLogger(__name__)
 
 def setup(args):
     for branch in args.branches:
+        url = args.config.find_one(f'$.{branch}.url')
+        branch_name = args.config.find_one(f'$.{branch}.branch')
+        branches_dir = args.config.find_one('$.outputs.branches')
         # clone the repository
         branch_dir = clone_repo(
-            args.config[branch]['url'],
-            args.config[branch]['branch'],
-            args.config['outputs']['branches']
+            url,
+            branch_name,
+            branches_dir
         )
         # patch any files that need patching
         patch(branch_dir, 'modules_rocky8.sh')

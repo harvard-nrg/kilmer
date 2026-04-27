@@ -1,10 +1,11 @@
-import yaml
 import logging
 from pathlib import Path
+from argparse import ArgumentParser
+
 from .setup import setup
 from .launch import launch
 from .validate import validate
-from argparse import ArgumentParser
+from kilmer.config import Config
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
@@ -28,8 +29,7 @@ def main():
         default='report.json')
     args = parser.parse_args()
 
-    with open(args.config, 'rb') as fo:
-        args.config = yaml.load(fo, Loader=yaml.SafeLoader)
+    args.config = Config(args.config)
 
     match args.mode:
         case 'setup':
