@@ -55,10 +55,10 @@ def launch(args):
             pwd=swdir,
             mounts={
                 '/n':'/n',
-                indir: '/input',
-                outdir: '/output',
-                outdir: '/output_AP',
-                outdir: '/output_PA'
+                '/input': indir,
+                '/output': outdir,
+                '/output_AP': outdir,
+                '/output_PA': outdir
             }
         )
         # run the command

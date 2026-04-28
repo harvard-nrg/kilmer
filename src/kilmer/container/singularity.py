@@ -12,9 +12,9 @@ def wrap_command(cmd, wrapper, mounts, pwd=None):
             '--pwd', str(pwd)
         ])
     # specify any bind mounts
-    for a,b in iter(mounts.items()):
+    for dst,src in iter(mounts.items()):
         scmd.extend([
-            '--bind', f'{a}:{b}'
+            '--bind', f'{src}:{dst}'
         ])
     scmd.append(str(wrapper))
     scmd.append(cmd)
