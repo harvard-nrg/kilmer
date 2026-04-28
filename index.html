@@ -424,6 +424,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#bids" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        bids
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#mock-data" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -620,6 +631,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#bids" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        bids
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#mock-data" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -720,14 +742,14 @@ pass this configuration file using the <code>-c|--config</code> argument</p>
 </code></pre></div>
 <h3 id="example">example</h3>
 <div class="highlight"><pre><span></span><code><span class="nt">containers</span><span class="p">:</span>
-<span class="w">    </span><span class="c1"># This is where to define the path to your singularity container </span>
-<span class="w">    </span><span class="c1"># image</span>
+<span class="w">    </span><span class="c1"># This is where to define the path to your </span>
+<span class="w">    </span><span class="c1"># singularity container image</span>
 <span class="w">    </span><span class="nt">wrapper</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/path/to/kilmer.sif</span>
 
 <span class="nt">inputs</span><span class="p">:</span>
 <span class="w">    </span><span class="c1"># This is where to define your input datasets </span>
-<span class="w">    </span><span class="c1"># directory. An example subject directory should </span>
-<span class="w">    </span><span class="c1"># look like the following</span>
+<span class="w">    </span><span class="c1"># directory. An example subject directory </span>
+<span class="w">    </span><span class="c1"># should look like the following</span>
 <span class="w">    </span><span class="c1">#</span>
 <span class="w">    </span><span class="c1"># datasets</span>
 <span class="w">    </span><span class="c1"># └── ASDF</span>
@@ -735,6 +757,7 @@ pass this configuration file using the <code>-c|--config</code> argument</p>
 <span class="err">   </span><span class="w"> </span><span class="c1">#     │   ├── cluster_requests.csv</span>
 <span class="err">   </span><span class="w"> </span><span class="c1">#     │   └── tasktype_consolidated.csv</span>
 <span class="err">   </span><span class="w"> </span><span class="c1">#     ├── mocks</span>
+<span class="w">    </span><span class="c1">#     │   ├── bids.tar.gz</span>
 <span class="err">   </span><span class="w"> </span><span class="c1">#     │   └── freesurfer.tar.gz</span>
 <span class="err">   </span><span class="w"> </span><span class="c1">#     ├── README.md</span>
 <span class="err">   </span><span class="w"> </span><span class="c1">#     └── subject_lists</span>
@@ -747,9 +770,16 @@ pass this configuration file using the <code>-c|--config</code> argument</p>
 <span class="w">    </span><span class="c1"># iProc branches will be installed</span>
 <span class="w">    </span><span class="nt">branches</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/path/to/branches</span>
 
-<span class="w">    </span><span class="c1"># This is where to define where all </span>
-<span class="w">    </span><span class="c1"># iProc output will be saved</span>
-<span class="w">    </span><span class="nt">results</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/path/to/results</span>
+<span class="w">    </span><span class="c1"># This is where to define where all</span>
+<span class="w">    </span><span class="c1"># iProc processed results will be saved</span>
+<span class="w">    </span><span class="nt">results</span><span class="p">:</span>
+<span class="w">        </span><span class="c1"># This is where to define where results will </span>
+<span class="w">        </span><span class="c1"># be saved when data are pulled from XNAT</span>
+<span class="w">        </span><span class="nt">xnat</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/path/to/results/xnat</span>
+
+<span class="w">        </span><span class="c1"># This is where to define where results will</span>
+<span class="w">        </span><span class="c1"># be saved when data are pulled from BIDS</span>
+<span class="w">        </span><span class="nt">bids</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/path/to/results/bids</span>
 
 <span class="c1"># This is where to define your &quot;left&quot; branch</span>
 <span class="nt">left</span><span class="p">:</span>
@@ -826,6 +856,18 @@ kilmer<span class="w"> </span>-c<span class="w"> </span>kilmer.yaml<span class="
 </code></pre></div>
 <p>If you have a HPC cluster, you can launch the <code>left</code> and <code>right</code> branches 
 in parallel.</p>
+<h4 id="bids">bids</h4>
+<p>By default, iProc pulls data from an XNAT deployment. If you want to pull data
+from BIDS you can pass the <code>-B|--bids</code> argument</p>
+<div class="admonition important">
+<p class="admonition-title">BIDS data</p>
+<p>When enabling <code>-B|--bids</code>, <code>kilmer</code> will attempt to extract the file
+<code>mocks/bids.tar.gz</code> into the results directory. Make sure this file 
+exists.</p>
+</div>
+<div class="highlight"><pre><span></span><code>kilmer<span class="w"> </span>-c<span class="w"> </span>kilmer.yaml<span class="w"> </span>launch<span class="w"> </span>-s<span class="w"> </span>ASDF<span class="w"> </span>-b<span class="w"> </span>left<span class="w"> </span>--bids
+kilmer<span class="w"> </span>-c<span class="w"> </span>kilmer.yaml<span class="w"> </span>launch<span class="w"> </span>-s<span class="w"> </span>ASDF<span class="w"> </span>-b<span class="w"> </span>right<span class="w"> </span>--bids
+</code></pre></div>
 <h4 id="mock-data">mock data</h4>
 <p>You can have <code>kilmer</code> extract preprocessed data into your output directory to 
 save time.</p>
@@ -847,6 +889,11 @@ preprocessed FreeSurfer data and place the tarball under the <code>mocks</code> 
 <h3 id="validation">validation</h3>
 <p>The <code>validate</code> stage will compare the <code>left</code> and <code>right</code> branches, look for 
 differences, and generate a report file</p>
+<div class="admonition tip">
+<p class="admonition-title">BIDS validation</p>
+<p>If you're trying to validate results derived from BIDS data, remember to 
+provide the <code>-B|--bids</code> argument.</p>
+</div>
 <div class="highlight"><pre><span></span><code>kilmer<span class="w"> </span>-c<span class="w"> </span>kilmer.yaml<span class="w"> </span>validate<span class="w"> </span>-s<span class="w"> </span>ASDF
 </code></pre></div>
 <p>By default, all differences will be printed to the console and saved to 
