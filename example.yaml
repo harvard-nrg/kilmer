@@ -26,9 +26,15 @@ outputs:
     # iProc branches will be installed
     branches: /path/to/branches
 
-    # This is where to define where all 
-    # iProc output will be saved
-    results: /path/to/results
+    # This is where to define where all
+    # iProc processed results will be saved
+    results:
+        # This is where to define where output will 
+        # be saved when data are pulled from XNAT
+        xnat: /path/to/results/xnat
+        # This is where to define where output will
+        # be saved when data are pulled from BIDS
+        bids: /path/to/results/bids
 
 # This is where to define your "left" branch
 left:

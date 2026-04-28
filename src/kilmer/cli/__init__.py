@@ -19,16 +19,19 @@ def main():
         default=['left', 'right'], choices=['left', 'right'])
     launch_parser = subparser.add_parser('launch')
     launch_parser.add_argument('-s', '--subject', required=True)
+    launch_parser.add_argument('-B', '--bids', action='store_true')
     launch_parser.add_argument('-m', '--mock', nargs='+', default=[],
         choices=['freesurfer'])
     launch_parser.add_argument('-b', '--branch', required=True)
     validate_parser = subparser.add_parser('validate')
     validate_parser.add_argument('-s', '--subject', required=True)
     validate_parser.add_argument('-r', '--reverse', action='store_true')
+    validate_parser.add_argument('-B', '--bids', action='store_true')
     validate_parser.add_argument('-o', '--output-file', type=Path,
         default='report.json')
     args = parser.parse_args()
 
+    # load configuration file
     args.config = Config(args.config)
 
     match args.mode:

@@ -28,14 +28,14 @@ kilmer --config kilmer.yaml ...
 ### example
 ```yaml
 containers:
-    # This is where to define the path to your singularity container 
-    # image
+    # This is where to define the path to your 
+    # singularity container image
     wrapper: /path/to/kilmer.sif
 
 inputs:
     # This is where to define your input datasets 
-    # directory. An example subject directory should 
-    # look like the following
+    # directory. An example subject directory 
+    # should look like the following
     #
     # datasets
     # └── ASDF
@@ -43,6 +43,7 @@ inputs:
     #     │   ├── cluster_requests.csv
     #     │   └── tasktype_consolidated.csv
     #     ├── mocks
+    #     │   ├── bids.tar.gz
     #     │   └── freesurfer.tar.gz
     #     ├── README.md
     #     └── subject_lists
@@ -55,9 +56,16 @@ outputs:
     # iProc branches will be installed
     branches: /path/to/branches
 
-    # This is where to define where all 
-    # iProc output will be saved
-    results: /path/to/results
+    # This is where to define where all
+    # iProc processed results will be saved
+    results:
+        # This is where to define where results will 
+        # be saved when data are pulled from XNAT
+        xnat: /path/to/results/xnat
+
+        # This is where to define where results will
+        # be saved when data are pulled from BIDS
+        bids: /path/to/results/bids
 
 # This is where to define your "left" branch
 left:
@@ -144,6 +152,20 @@ kilmer -c kilmer.yaml launch --subject ASDF --branch right
 If you have a HPC cluster, you can launch the `left` and `right` branches 
 in parallel.
 
+#### bids
+By default, iProc pulls data from an XNAT deployment. If you want to pull data
+from BIDS you can pass the `-B|--bids` argument
+
+!!! important "BIDS data"
+    When enabling `-B|--bids`, `kilmer` will attempt to extract the file
+    `mocks/bids.tar.gz` into the results directory. Make sure this file 
+    exists.
+
+```bash
+kilmer -c kilmer.yaml launch -s ASDF -b left --bids
+kilmer -c kilmer.yaml launch -s ASDF -b right --bids
+```
+
 #### mock data
 You can have `kilmer` extract preprocessed data into your output directory to 
 save time.
@@ -172,6 +194,10 @@ kilmer -c kilmer.yaml launch -s ASDF -b left --mock freesurfer
 ### validation
 The `validate` stage will compare the `left` and `right` branches, look for 
 differences, and generate a report file
+
+!!! tip "BIDS validation"
+    If you're trying to validate results derived from BIDS data, remember to 
+    provide the `-B|--bids` argument.
 
 ```bash
 kilmer -c kilmer.yaml validate -s ASDF

@@ -16,11 +16,14 @@ logger = logging.getLogger(__name__)
 
 def validate(args):
     subject = args.subject
-    results = Path(args.config.find_one('$.outputs.results'))
     left_url = args.config.find_one('$.left.url')
     left_branch = args.config.find_one('$.left.branch')
     right_url = args.config.find_one('$.right.url')
     right_branch = args.config.find_one('$.right.branch')
+    if args.bids:
+        results = Path(args.config.find_one('$.outputs.results.bids'))
+    else:
+        results = Path(args.config.find_one('$.outputs.results.xnat'))
 
     left_dir = path_with_repo(results, left_url, left_branch)
     right_dir = path_with_repo(results, right_url, right_branch)
