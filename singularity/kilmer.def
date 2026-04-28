@@ -24,7 +24,9 @@ From: rockylinux:8
         librsvg2 \
         libtool-ltdl \
         libgomp \
-        urw-base35-fonts
+        urw-base35-fonts \
+        jq \
+        libquadmath
 
 %environment
     export AFNI_NIFTI_NOEXT=YES

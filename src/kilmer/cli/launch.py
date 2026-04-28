@@ -56,7 +56,9 @@ def launch(args):
             mounts={
                 '/n':'/n',
                 indir: '/input',
-                outdir: '/output'
+                outdir: '/output',
+                outdir: '/output_AP',
+                outdir: '/output_PA'
             }
         )
         # run the command
