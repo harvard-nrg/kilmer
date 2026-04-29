@@ -12,7 +12,7 @@ def build_command(cfg, stage, bids=None):
     if bids:
         cmd.extend([
             '--bids',
-            bids
+            str(bids)
         ])
     cmd.append('--debug')
     cmds = sp.list2cmdline(cmd)

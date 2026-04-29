@@ -5,6 +5,7 @@ From: rockylinux:8
     dnf install -y epel-release
     dnf config-manager --set-enabled powertools
     dnf install -y \
+        vim \
         which \
         python3.11 \
         Lmod \
@@ -33,5 +34,10 @@ From: rockylinux:8
 
 %runscript
     source .venv/bin/activate
+    source ./modules_rocky8.sh
+    $@
+
+%apprun tedana
+    source .tedana/bin/activate
     source ./modules_rocky8.sh
     $@

@@ -1,6 +1,6 @@
 import subprocess as sp
 
-def wrap_command(cmd, wrapper, mounts, pwd=None):
+def wrap_command(cmd, wrapper, mounts, app=None, pwd=None):
     ''' wrap command {cmd} in a singularity run command '''
     scmd = [
         'singularity',
@@ -11,10 +11,15 @@ def wrap_command(cmd, wrapper, mounts, pwd=None):
         scmd.extend([
             '--pwd', str(pwd)
         ])
-    # specify any bind mounts
+    # add bind mounts if any were specified
     for dst,src in iter(mounts.items()):
         scmd.extend([
             '--bind', f'{src}:{dst}'
+        ])
+    # add app argument if one was specified
+    if app:
+        scmd.extend([
+            '--app', app
         ])
     scmd.append(str(wrapper))
     scmd.append(cmd)

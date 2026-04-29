@@ -37,18 +37,16 @@ inputs:
     # directory. An example subject directory 
     # should look like the following
     #
-    # datasets
-    # └── ASDF
-    #     ├── configs
-    #     │   ├── cluster_requests.csv
-    #     │   └── tasktype_consolidated.csv
-    #     ├── mocks
-    #     │   ├── bids.tar.gz
-    #     │   └── freesurfer.tar.gz
-    #     ├── README.md
-    #     └── subject_lists
-    #         ├── ASDF.cfg
-    #         └── scanlist_ASDF.csv
+    # datasets/ASDF/
+    # |-- configs
+    # |   |-- cluster_requests.csv
+    # |   `-- tasktype_consolidated.csv
+    # |-- mocks
+    # |   |-- bids.tar.gz           (optional)
+    # |   `-- freesurfer.tar.gz     (optional)
+    # `-- subject_lists
+    #     |-- ASDF.cfg
+    #     `-- scanlist_ASDF.csv
     datasets: /path/to/datasets
 
 outputs:
@@ -86,6 +84,7 @@ iproc:
         - unwarp_motioncorrect_align
         - T1_warp_and_mask
         - combine_and_apply_warp
+        - tedana
         - filter_and_project
 
 validation:
@@ -102,17 +101,19 @@ validation:
 ```
 
 ## Container
-`kilmer` will run all iProc commands within a Singularity container. This 
-container has all of the required operating system dependencies installed. 
+`kilmer` will run all iProc commands within a [Singularity][Singularity]
+container. This container has all of the required operating system 
+dependencies installed. 
 
 !!! question "Why?"
     The main reason for using a container is to trick iProc into thinking 
-    it's writing output to `/output` by using `--bind` mounts. This will 
-    ensure that any strings written to any output files that contain the 
-    output directory are identical, enabling more direct file comparisons.
+    it's writing output to `/output`, `/output_AP`, or `/output_PA` by using 
+    Singularity `--bind` mounts. This will ensure that any strings written to 
+    any output files that contain the runtime output directory are identical, 
+    enabling more direct file comparisons.
 
 ### building the container
-The Singularity definition file is included within the `kilmer` repository 
+There is a Singularity definition file included within the `kilmer` repository 
 under `singularity/kilmer.def`. To build the container, run the the following 
 commands
 
@@ -142,7 +143,8 @@ branch. All iProc stages will be run sequentially
 
 !!! important "iProc configuration"
     Your subject configuration files should be configured to write all output 
-    to `/output` and accept any input files from `/input`.
+    to `/output`, `/output_AP`, or `/output_PA` and accept any input files 
+    from `/input`.
 
 ```bash
 kilmer -c kilmer.yaml launch --subject ASDF --branch left
@@ -237,3 +239,4 @@ other.
 [venv]: https://docs.python.org/3/library/venv.html
 [iProc]: https://github.com/harvard-nrg/iProc/
 [YAML]: https://yaml.org/spec/1.2.2/
+[Singularity]: https://docs.sylabs.io/guides/latest/user-guide/

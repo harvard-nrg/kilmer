@@ -10,6 +10,7 @@ from sortedcontainers import SortedDict
 
 import kilmer.compare.pdf as pdf
 import kilmer.compare.nifti as nifti
+import kilmer.compare.html as html
 from kilmer.commons import path_with_repo
 
 logger = logging.getLogger(__name__)
@@ -35,6 +36,7 @@ def validate(args):
     # add subject directory
     left_dir = left_dir / subject
     right_dir = right_dir / subject
+    logger.info(f'comparing {left_dir} to {right_dir}')
 
     differences = dict()
 
@@ -46,15 +48,22 @@ def validate(args):
             '$.validation.nifti.exclude',
             default=list()
         )
-        diff = compare_niftis(left_dir, right_dir, patterns)
+        diff = compare_nifti_files(left_dir, right_dir, patterns)
         differences['nifti'] = diff
 
     # compare pdf files
     validate = args.config.find_one('$.validation.pdf.validate', True)
     if validate:
         logger.info('validating all PDF files')
-        diff = compare_pdfs(left_dir, right_dir)
+        diff = compare_pdf_files(left_dir, right_dir)
         differences['pdf'] = diff
+
+    # compare html files (tedana)
+    validate = args.config.find_one('$.validation.html.validate', True)
+    if validate:
+        logger.info('validating all HTML files')
+        diff = compare_html_files(left_dir, right_dir)
+        differences['html'] = diff
 
     # save report
     logger.info(f'saving {args.output_file}')
@@ -68,7 +77,25 @@ def validate(args):
             case _:
                 raise Exception(f'unrecognized output file suffix {suffix}')
 
-def compare_pdfs(left_dir, right_dir):
+def compare_html_files(left_dir, right_dir):
+    diffs = SortedDict()
+    with contextlib.chdir(left_dir):
+        files = Path().rglob('*.html')
+        pbar = tqdm(list(files))
+        errors = 0
+        for left_file in pbar:
+            pbar.set_description(f'{errors} errors')
+            right_file = Path(right_dir, left_file)
+            left_file = left_file.absolute()
+            right_file = right_file.absolute()
+            logger.debug(f'comparing {left_file} to {right_file}')
+            mtime = html.cmp(left_file, right_file)
+            if mtime:
+                errors += 1
+                diffs[mtime] = str(left_file), str(right_file)
+    return dict(diffs)
+
+def compare_pdf_files(left_dir, right_dir):
     diffs = SortedDict()
     with contextlib.chdir(left_dir):
         files = Path().rglob('*.pdf')
@@ -80,14 +107,13 @@ def compare_pdfs(left_dir, right_dir):
             left_file = left_file.absolute()
             right_file = right_file.absolute()
             logger.debug(f'comparing {left_file} to {right_file}')
-            # compare left and right nifti files
             mtime = pdf.cmp(left_file, right_file)
             if mtime:
                 errors += 1
                 diffs[mtime] = str(left_file), str(right_file)
     return dict(diffs)
 
-def compare_niftis(left_dir, right_dir, patterns):
+def compare_nifti_files(left_dir, right_dir, patterns):
     diffs = SortedDict()
     patterns = [re.compile(x) for x in patterns]
     with contextlib.chdir(left_dir):

@@ -5,17 +5,19 @@ from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
-def venv(d, install=True):
-    ''' create a python venv named .venv within directory {d} '''
+def venv(d, name=None, requirements=None):
+    ''' create a python venv within directory {d} '''
+    if not name:
+        name = '.venv'
     with contextlib.chdir(d):
         cwd = Path.cwd()
-        venvd = Path('.venv')
-        if not venvd.exists():
-            logger.info(f'creating .venv in {d}')
+        venvdir = Path(name)
+        if not venvdir.exists():
+            logger.info(f'creating venv {name} in {d}')
             cmd = [
                 'python3.11',
                 '-m', 'venv',
-                str(venvd)
+                venvdir
             ]
             cmdstr = sp.list2cmdline(cmd)
             # create venv 
@@ -23,21 +25,26 @@ def venv(d, install=True):
             sp.call(cmd)
         # upgrade pip
         cmd = [
-            '.venv/bin/pip',
+            venvdir / 'bin' / 'pip',
             'install',
             '--upgrade', 'pip'
         ]
         cmdstr = sp.list2cmdline(cmd)
         logger.info(f'running {cmdstr}')
         sp.call(cmd)
-        if install:
-            # install the current python package
+        if requirements:
             cmd = [
-                '.venv/bin/pip',
+                venvdir / 'bin' / 'pip',
+                'install',
+                '-r', requirements
+            ]
+        else:
+            cmd = [
+                venvdir / 'bin' / 'pip',
                 'install',
                 '.'
             ]
-            cmdstr = sp.list2cmdline(cmd)
-            logger.info(f'running {cmdstr}')
-            sp.call(cmd)
-        return Path(cwd, '.venv')
+        cmdstr = sp.list2cmdline(cmd)
+        logger.info(f'running {cmdstr}')
+        sp.call(cmd)
+        return Path(cwd, name)

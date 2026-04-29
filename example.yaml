@@ -8,17 +8,16 @@ inputs:
     # directory. An example subject directory 
     # should look like the following
     #
-    # datasets
-    # └── ASDF
-    #     ├── configs
-    #     │   ├── cluster_requests.csv
-    #     │   └── tasktype_consolidated.csv
-    #     ├── mocks
-    #     │   └── freesurfer.tar.gz
-    #     ├── README.md
-    #     └── subject_lists
-    #         ├── ASDF.cfg
-    #         └── scanlist_ASDF.csv
+    # datasets/ASDF/
+    # |-- configs
+    # |   |-- cluster_requests.csv
+    # |   `-- tasktype_consolidated.csv
+    # |-- mocks
+    # |   |-- bids.tar.gz           (optional)
+    # |   `-- freesurfer.tar.gz     (optional)
+    # `-- subject_lists
+    #     |-- ASDF.cfg
+    #     `-- scanlist_ASDF.csv
     datasets: /path/to/datasets
 
 outputs:
@@ -55,6 +54,7 @@ iproc:
         - unwarp_motioncorrect_align
         - T1_warp_and_mask
         - combine_and_apply_warp
+        - tedana
         - filter_and_project
 
 validation:

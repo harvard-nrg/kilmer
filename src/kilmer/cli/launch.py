@@ -6,6 +6,7 @@ from pathlib import Path
 import subprocess as sp
 
 import kilmer.iproc as iproc
+import kilmer.tedana as tedana
 import kilmer.container as container
 from kilmer.commons import path_with_repo
 
@@ -32,38 +33,65 @@ def launch(args):
     indir = datasets
     bidsdir = None
 
-    # path to the iProc config file for the current subject
-    cfg = Path('/input', subject, 'subject_lists', f'{subject}.cfg')
+    # paths to iProc config files for the current subject
+    subject_lists_dir = Path(indir, subject, 'subject_lists')
+    configs_dir = Path(indir, subject, 'configs')
+    cfg = subject_lists_dir / f'{subject}.cfg'
+    scanlist = subject_lists_dir / f'scanlist_{subject}.csv'
+    tasklist = configs_dir / 'tasktype_consolidated.csv'
+
+    # get the runtime output directory from subject config
+    runtime_outdir = iproc.config.get_outdir(cfg)
 
     # extract bids data if user passed --bids
     if args.bids and 'bids' not in args.mock:
-        bidsdir = Path('/output', subject, 'BIDS')
+        bidsdir = Path(runtime_outdir, subject, 'BIDS')
         args.mock.append('bids')
 
     # extract any mock data to the output directory
     for m in args.mock:
         mock(datasets, subject, outdir, m)
 
-    # run iProc for all specified stages
+    # run iProc or tedana commands for all specified stages
     for stage in stages:
-        # build the iProc command
-        cmd,cmdstr = iproc.build_command(cfg, stage=stage, bids=bidsdir)
-        # wrap the iProc command in a container
-        cmd,cmdstr = container.wrap_command(
-            cmdstr,
-            wrapper,
-            pwd=swdir,
-            mounts={
-                '/n':'/n',
-                '/input': indir,
-                '/output': outdir,
-                '/output_AP': outdir,
-                '/output_PA': outdir
-            }
-        )
-        # run the command
-        logger.info(f'running {cmdstr}')
-        sp.check_output(cmd)
+        match stage:
+            # build tedana commands for each multi-echo scan
+            case 'tedana':
+                app = 'tedana'
+                resolution = iproc.config.get_resolution(cfg)
+                commands = tedana.build_commands(
+                    scanlist,
+                    tasklist,
+                    resolution,
+                    runtime_outdir
+                )
+            # every other stage should be an iproc stage
+            case _:
+                app = None
+                commands = [
+                    iproc.build_command(
+                        '/iProc.cfg',
+                        stage=stage,
+                        bids=bidsdir
+                    )
+                ]
+
+        # wrap each command in a container and run it
+        for cmd,cmds in commands:
+            cmd,cmds = container.wrap_command(
+                cmds,
+                wrapper,
+                app=app,
+                pwd=swdir,
+                mounts={
+                    '/n':'/n',
+                    '/iProc.cfg': cfg,
+                    '/input': indir,
+                    runtime_outdir: outdir
+                }
+            )
+            logger.info(f'running {cmds}')
+            sp.check_output(cmd)
 
 def mock(datasets, subject, outdir, mock):
     ''' Extract mock data '''

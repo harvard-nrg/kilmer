@@ -1,1 +1,1 @@
-from .patch import patch
+from .patch import patch_files, set_permissions

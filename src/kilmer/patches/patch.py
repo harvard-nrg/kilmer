@@ -6,22 +6,27 @@ from importlib.resources import files
 
 logger = logging.getLogger(__name__)
 
-def patch(base, path):
-    ''' patch file `path` starting from base directory `base` '''
-    path = Path(path)
+def set_permissions(base, path, permissions):
     with contextlib.chdir(base):
-        # locate the patch file to apply
-        patchfile = locate_patch_file(path)
-        # apply the patch using the patch utility
-        logger.info(f'applying patch {patchfile} within {base}')
-        cmd = [
-            'patch',
-            path,
-            patchfile
-        ]
-        sp.call(cmd)
+        logger.info(f'chmod {path} to {permissions:#o}')
+        Path(path).chmod(permissions)
 
-def locate_patch_file(path):
-    ''' locate a patch file in this module directory '''
-    return files('kilmer.patches').joinpath(path.name + '.patch')
+def patch_files(base, patch_dir):
+    logger.info(f'switching to {base}')
+    with contextlib.chdir(base):
+        for patch in locate_patches(patch_dir):
+            logger.info(f'applying patch {patch} within {base}')
+            cmd = [
+                'patch',
+                '-p0',
+                '-i',
+                patch
+            ]
+            sp.call(cmd)
+
+def locate_patches(branchdir):
+    ''' locate patch files in this module directory '''
+    patchdir = files('kilmer.patches') / 'patches' / branchdir
+    for patch in patchdir.rglob('*.patch'):
+        yield patch
 
