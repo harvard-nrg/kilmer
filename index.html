@@ -751,18 +751,16 @@ pass this configuration file using the <code>-c|--config</code> argument</p>
 <span class="w">    </span><span class="c1"># directory. An example subject directory </span>
 <span class="w">    </span><span class="c1"># should look like the following</span>
 <span class="w">    </span><span class="c1">#</span>
-<span class="w">    </span><span class="c1"># datasets</span>
-<span class="w">    </span><span class="c1"># └── ASDF</span>
-<span class="err">  </span><span class="w">  </span><span class="c1">#     ├── configs</span>
-<span class="err">   </span><span class="w"> </span><span class="c1">#     │   ├── cluster_requests.csv</span>
-<span class="err">   </span><span class="w"> </span><span class="c1">#     │   └── tasktype_consolidated.csv</span>
-<span class="err">   </span><span class="w"> </span><span class="c1">#     ├── mocks</span>
-<span class="w">    </span><span class="c1">#     │   ├── bids.tar.gz</span>
-<span class="err">   </span><span class="w"> </span><span class="c1">#     │   └── freesurfer.tar.gz</span>
-<span class="err">   </span><span class="w"> </span><span class="c1">#     ├── README.md</span>
-<span class="err">   </span><span class="w"> </span><span class="c1">#     └── subject_lists</span>
-<span class="err">   </span><span class="w"> </span><span class="c1">#         ├── ASDF.cfg</span>
-<span class="err">   </span><span class="w"> </span><span class="c1">#         └── scanlist_ASDF.csv</span>
+<span class="w">    </span><span class="c1"># datasets/ASDF/</span>
+<span class="w">    </span><span class="c1"># |-- configs</span>
+<span class="w">    </span><span class="c1"># |   |-- cluster_requests.csv</span>
+<span class="w">    </span><span class="c1"># |   `-- tasktype_consolidated.csv</span>
+<span class="w">    </span><span class="c1"># |-- mocks</span>
+<span class="w">    </span><span class="c1"># |   |-- bids.tar.gz           (optional)</span>
+<span class="w">    </span><span class="c1"># |   `-- freesurfer.tar.gz     (optional)</span>
+<span class="w">    </span><span class="c1"># `-- subject_lists</span>
+<span class="w">    </span><span class="c1">#     |-- ASDF.cfg</span>
+<span class="w">    </span><span class="c1">#     `-- scanlist_ASDF.csv</span>
 <span class="w">    </span><span class="nt">datasets</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/path/to/datasets</span>
 
 <span class="nt">outputs</span><span class="p">:</span>
