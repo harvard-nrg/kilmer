@@ -9,7 +9,7 @@ import kilmer.compare.pdf as pdf
 
 logger = logging.getLogger(__name__)
 
-def cmp(a, b):
+def cmp(a, b, wrapper=None):
     with tempfile.TemporaryDirectory() as tmpdir:
         tmpdir = Path(tmpdir)
         tmpdir_a = tmpdir / 'a'
@@ -19,7 +19,7 @@ def cmp(a, b):
         pdf_a = html_to_pdf(a, tmpdir_a)
         pdf_b = html_to_pdf(b, tmpdir_b)
         logger.debug(f'comparing {pdf_a} to {pdf_b}')
-        return pdf.cmp(pdf_a, pdf_b)
+        return pdf.cmp(pdf_a, pdf_b, wrapper=wrapper)
 
 def html_to_pdf(path, outdir):
     saveto = outdir / path.with_suffix('.pdf').name

@@ -27,7 +27,8 @@ From: rockylinux:8
         libgomp \
         urw-base35-fonts \
         jq \
-        libquadmath
+        libquadmath \
+        poppler-utils
 
 %environment
     export AFNI_NIFTI_NOEXT=YES

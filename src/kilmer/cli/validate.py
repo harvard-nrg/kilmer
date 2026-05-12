@@ -21,6 +21,7 @@ def validate(args):
     left_branch = args.config.find_one('$.left.branch')
     right_url = args.config.find_one('$.right.url')
     right_branch = args.config.find_one('$.right.branch')
+    wrapper = Path(args.config.find_one('$.containers.wrapper'))
     if args.bids:
         results = Path(args.config.find_one('$.outputs.results.bids'))
     else:
@@ -55,14 +56,14 @@ def validate(args):
     validate = args.config.find_one('$.validation.pdf.validate', True)
     if validate:
         logger.info('validating all PDF files')
-        diff = compare_pdf_files(left_dir, right_dir)
+        diff = compare_pdf_files(left_dir, right_dir, wrapper=wrapper)
         differences['pdf'] = diff
 
     # compare html files (tedana)
     validate = args.config.find_one('$.validation.html.validate', True)
     if validate:
         logger.info('validating all HTML files')
-        diff = compare_html_files(left_dir, right_dir)
+        diff = compare_html_files(left_dir, right_dir, wrapper=wrapper)
         differences['html'] = diff
 
     # save report
@@ -77,7 +78,7 @@ def validate(args):
             case _:
                 raise Exception(f'unrecognized output file suffix {suffix}')
 
-def compare_html_files(left_dir, right_dir):
+def compare_html_files(left_dir, right_dir, wrapper=None):
     diffs = SortedDict()
     with contextlib.chdir(left_dir):
         files = Path().rglob('*.html')
@@ -89,13 +90,13 @@ def compare_html_files(left_dir, right_dir):
             left_file = left_file.absolute()
             right_file = right_file.absolute()
             logger.debug(f'comparing {left_file} to {right_file}')
-            mtime = html.cmp(left_file, right_file)
+            mtime = html.cmp(left_file, right_file, wrapper=wrapper)
             if mtime:
                 errors += 1
                 diffs[mtime] = str(left_file), str(right_file)
     return dict(diffs)
 
-def compare_pdf_files(left_dir, right_dir):
+def compare_pdf_files(left_dir, right_dir, wrapper=None):
     diffs = SortedDict()
     with contextlib.chdir(left_dir):
         files = Path().rglob('*.pdf')
@@ -107,7 +108,7 @@ def compare_pdf_files(left_dir, right_dir):
             left_file = left_file.absolute()
             right_file = right_file.absolute()
             logger.debug(f'comparing {left_file} to {right_file}')
-            mtime = pdf.cmp(left_file, right_file)
+            mtime = pdf.cmp(left_file, right_file, wrapper=wrapper)
             if mtime:
                 errors += 1
                 diffs[mtime] = str(left_file), str(right_file)
