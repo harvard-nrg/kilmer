@@ -1,4 +1,5 @@
 # Welcome
+
 Kilmer is a software project designed to help you run [iProc][iProc] validation
 tests.
 
@@ -8,6 +9,7 @@ set through each branch, compare the results, and generate a report of any
 differences.
 
 ## Installation
+
 Just use `pip`
 
 ```bash
@@ -18,6 +20,7 @@ source kilmer/bin/activate
 ```
 
 ## Configuration
+
 `kilmer` uses a simple configuation file in [YAML][YAML] format. You will 
 pass this configuration file using the `-c|--config` argument
 
@@ -26,16 +29,19 @@ kilmer --config kilmer.yaml ...
 ```
 
 ### example
+
 ```yaml
 containers:
+
     # This is where to define the path to your 
     # singularity container image
     wrapper: /path/to/kilmer.sif
 
 inputs:
+
     # This is where to define your input datasets 
-    # directory. An example subject directory 
-    # should look like the following
+    # directory. An example subject directory should 
+    # look like the following
     #
     # datasets/ASDF/
     # |-- configs
@@ -50,6 +56,7 @@ inputs:
     datasets: /path/to/datasets
 
 outputs:
+
     # This is where to define where all 
     # iProc branches will be installed
     branches: /path/to/branches
@@ -57,6 +64,7 @@ outputs:
     # This is where to define where all
     # iProc processed results will be saved
     results:
+
         # This is where to define where results will 
         # be saved when data are pulled from XNAT
         xnat: /path/to/results/xnat
@@ -67,15 +75,18 @@ outputs:
 
 # This is where to define your "left" branch
 left:
+
     url: https://github.com/harvard-nrg/iProc
     branch: main
 
 # This is where to define your "right" branch
 right:
+
     url: https://github.com/harvard-nrg/iProc
     branch: develop
 
 iproc:
+
     # These are the iProc stages you want to run 
     # during kilmer's "launch" mode
     stages:
@@ -87,20 +98,32 @@ iproc:
         - tedana
         - filter_and_project
 
+    # This is an optional setting to pass the 
+    # --overwrite argument to iProc. Set this 
+    # to True or False
+    overwrite: False
+
 validation:
+
     nifti:
+
         # This is where to define all directories 
-        # and file patterns to ignore when comparing 
-        # NIfTI files
+        # and file patterns (regular expressions) 
+        # to ignore when comparing NIfTI files
         exclude:
             - .*/scratch/.*
             - .*/time_point_\d+.nii.gz$
             - .*/T1_TARG_WARP_\d+.nii.gz$
             - .*/T1_TARG_FILE_\d+.nii.gz$
             - .*/MNI_TARG_FILE_\d+.nii.gz$
+
+        # This is an optional setting to skip NIfTI
+        # file validation. Set this to True or False.
+        validate: True
 ```
 
 ## Container
+
 `kilmer` will run all iProc commands within a [Singularity][Singularity]
 container. This container has all of the required operating system 
 dependencies installed. 
@@ -113,6 +136,7 @@ dependencies installed.
     enabling more direct file comparisons.
 
 ### building the container
+
 There is a Singularity definition file included within the `kilmer` repository 
 under `singularity/kilmer.def`. To build the container, run the the following 
 commands
@@ -127,9 +151,11 @@ singularity build kilmer.sif kilmer.def
 ```
 
 ## Usage
+
 The three stages of `kilmer` are `setup`, `launch`, and `validate`.
 
 ### setup
+
 The `setup` stage will download the `left` and `right` branches from 
 iProc and install each branch into a separate virtual environment.
 
@@ -138,6 +164,7 @@ kilmer -c kilmer.yaml setup
 ```
 
 ### launch
+
 The `launch` stage will run a dataset through either the `left` or `right` 
 branch. All iProc stages will be run sequentially
 
@@ -155,6 +182,7 @@ If you have a HPC cluster, you can launch the `left` and `right` branches
 in parallel.
 
 #### bids
+
 By default, iProc pulls data from an XNAT deployment. If you want to pull data
 from BIDS you can pass the `-B|--bids` argument
 
@@ -169,6 +197,7 @@ kilmer -c kilmer.yaml launch -s ASDF -b right --bids
 ```
 
 #### mock data
+
 You can have `kilmer` extract preprocessed data into your output directory to 
 save time.
 
@@ -194,6 +223,7 @@ kilmer -c kilmer.yaml launch -s ASDF -b left --mock freesurfer
 ```
 
 ### validation
+
 The `validate` stage will compare the `left` and `right` branches, look for 
 differences, and generate a report file
 
@@ -209,6 +239,7 @@ By default, all differences will be printed to the console and saved to
 `report.json`.
 
 #### output file
+
 By default, differences will be saved to `report.json` in your current working 
 directory. You can customize the output file using the `-o|--output-file` 
 argument
@@ -221,6 +252,7 @@ For your convenience, files listed within the report will be sorted (ascending)
 based on the file's modification time.
 
 #### reverse
+
 By default, `kilmer` will compare the `left` branch to the `right` branch. The 
 direction of this comparison is an important consideration. 
 

@@ -20,6 +20,7 @@ def launch(args):
     branches = Path(args.config.find_one('$.outputs.branches'))
     datasets = Path(args.config.find_one('$.inputs.datasets'))
     stages = args.config.find_one('$.iproc.stages')
+    overwrite = args.config.find_one('$.iproc.overwrite', default=False)
     wrapper = Path(args.config.find_one('$.containers.wrapper'))
     if args.bids:
         results = Path(args.config.find_one('$.outputs.results.bids'))
@@ -72,6 +73,7 @@ def launch(args):
                     iproc.build_command(
                         '/iProc.cfg',
                         stage=stage,
+                        overwrite=overwrite,
                         bids=bidsdir
                     )
                 ]

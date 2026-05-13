@@ -1,12 +1,14 @@
 containers:
+
     # This is where to define the path to your 
     # singularity container image
     wrapper: /path/to/kilmer.sif
 
 inputs:
+
     # This is where to define your input datasets 
-    # directory. An example subject directory 
-    # should look like the following
+    # directory. An example subject directory should 
+    # look like the following
     #
     # datasets/ASDF/
     # |-- configs
@@ -21,6 +23,7 @@ inputs:
     datasets: /path/to/datasets
 
 outputs:
+
     # This is where to define where all 
     # iProc branches will be installed
     branches: /path/to/branches
@@ -28,24 +31,29 @@ outputs:
     # This is where to define where all
     # iProc processed results will be saved
     results:
-        # This is where to define where output will 
+
+        # This is where to define where results will 
         # be saved when data are pulled from XNAT
         xnat: /path/to/results/xnat
-        # This is where to define where output will
+
+        # This is where to define where results will
         # be saved when data are pulled from BIDS
         bids: /path/to/results/bids
 
 # This is where to define your "left" branch
 left:
+
     url: https://github.com/harvard-nrg/iProc
     branch: main
 
 # This is where to define your "right" branch
 right:
+
     url: https://github.com/harvard-nrg/iProc
     branch: develop
 
 iproc:
+
     # These are the iProc stages you want to run 
     # during kilmer's "launch" mode
     stages:
@@ -57,15 +65,25 @@ iproc:
         - tedana
         - filter_and_project
 
+    # This is an optional setting to pass the 
+    # --overwrite argument to iProc. Set this 
+    # to True or False
+    overwrite: False
+
 validation:
+
     nifti:
         # This is where to define all directories 
-        # and file patterns to ignore when comparing 
-        # NIfTI files
+        # and file patterns (regular expressions) 
+        # to ignore when comparing NIfTI files
         exclude:
             - .*/scratch/.*
             - .*/time_point_\d+.nii.gz$
             - .*/T1_TARG_WARP_\d+.nii.gz$
             - .*/T1_TARG_FILE_\d+.nii.gz$
             - .*/MNI_TARG_FILE_\d+.nii.gz$
+
+        # This is an optional setting to skip NIfTI
+        # file validation. Set this to True or False.
+        validate: True
 

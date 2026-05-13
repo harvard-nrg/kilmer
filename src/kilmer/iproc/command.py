@@ -1,6 +1,6 @@
 import subprocess as sp
 
-def build_command(cfg, stage, bids=None):
+def build_command(cfg, stage, overwrite=False, bids=None):
     ''' build an iProc command '''
     cmd = [
         './iProc.py',
@@ -8,6 +8,9 @@ def build_command(cfg, stage, bids=None):
         '--stage', stage,
         '--executor', 'local'
     ]
+    # pass overwrite argument if requested
+    if overwrite:
+        cmd.append('--overwrite')
     # add bids path if one was passed in
     if bids:
         cmd.extend([
