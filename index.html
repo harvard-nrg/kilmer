@@ -742,14 +742,16 @@ pass this configuration file using the <code>-c|--config</code> argument</p>
 </code></pre></div>
 <h3 id="example">example</h3>
 <div class="highlight"><pre><span></span><code><span class="nt">containers</span><span class="p">:</span>
+
 <span class="w">    </span><span class="c1"># This is where to define the path to your </span>
 <span class="w">    </span><span class="c1"># singularity container image</span>
 <span class="w">    </span><span class="nt">wrapper</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/path/to/kilmer.sif</span>
 
 <span class="nt">inputs</span><span class="p">:</span>
+
 <span class="w">    </span><span class="c1"># This is where to define your input datasets </span>
-<span class="w">    </span><span class="c1"># directory. An example subject directory </span>
-<span class="w">    </span><span class="c1"># should look like the following</span>
+<span class="w">    </span><span class="c1"># directory. An example subject directory should </span>
+<span class="w">    </span><span class="c1"># look like the following</span>
 <span class="w">    </span><span class="c1">#</span>
 <span class="w">    </span><span class="c1"># datasets/ASDF/</span>
 <span class="w">    </span><span class="c1"># |-- configs</span>
@@ -764,6 +766,7 @@ pass this configuration file using the <code>-c|--config</code> argument</p>
 <span class="w">    </span><span class="nt">datasets</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/path/to/datasets</span>
 
 <span class="nt">outputs</span><span class="p">:</span>
+
 <span class="w">    </span><span class="c1"># This is where to define where all </span>
 <span class="w">    </span><span class="c1"># iProc branches will be installed</span>
 <span class="w">    </span><span class="nt">branches</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/path/to/branches</span>
@@ -771,6 +774,7 @@ pass this configuration file using the <code>-c|--config</code> argument</p>
 <span class="w">    </span><span class="c1"># This is where to define where all</span>
 <span class="w">    </span><span class="c1"># iProc processed results will be saved</span>
 <span class="w">    </span><span class="nt">results</span><span class="p">:</span>
+
 <span class="w">        </span><span class="c1"># This is where to define where results will </span>
 <span class="w">        </span><span class="c1"># be saved when data are pulled from XNAT</span>
 <span class="w">        </span><span class="nt">xnat</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/path/to/results/xnat</span>
@@ -781,15 +785,18 @@ pass this configuration file using the <code>-c|--config</code> argument</p>
 
 <span class="c1"># This is where to define your &quot;left&quot; branch</span>
 <span class="nt">left</span><span class="p">:</span>
+
 <span class="w">    </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/harvard-nrg/iProc</span>
 <span class="w">    </span><span class="nt">branch</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">main</span>
 
 <span class="c1"># This is where to define your &quot;right&quot; branch</span>
 <span class="nt">right</span><span class="p">:</span>
+
 <span class="w">    </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/harvard-nrg/iProc</span>
 <span class="w">    </span><span class="nt">branch</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">develop</span>
 
 <span class="nt">iproc</span><span class="p">:</span>
+
 <span class="w">    </span><span class="c1"># These are the iProc stages you want to run </span>
 <span class="w">    </span><span class="c1"># during kilmer&#39;s &quot;launch&quot; mode</span>
 <span class="w">    </span><span class="nt">stages</span><span class="p">:</span>
@@ -801,17 +808,27 @@ pass this configuration file using the <code>-c|--config</code> argument</p>
 <span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tedana</span>
 <span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">filter_and_project</span>
 
+<span class="w">    </span><span class="c1"># This is an optional setting to pass the </span>
+<span class="w">    </span><span class="c1"># --overwrite argument to iProc. Set this </span>
+<span class="w">    </span><span class="c1"># to True or False</span>
+<span class="w">    </span><span class="nt">overwrite</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span>
+
 <span class="nt">validation</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">nifti</span><span class="p">:</span>
+
 <span class="w">        </span><span class="c1"># This is where to define all directories </span>
-<span class="w">        </span><span class="c1"># and file patterns to ignore when comparing </span>
-<span class="w">        </span><span class="c1"># NIfTI files</span>
+<span class="w">        </span><span class="c1"># and file patterns (regular expressions) </span>
+<span class="w">        </span><span class="c1"># to ignore when comparing NIfTI files</span>
 <span class="w">        </span><span class="nt">exclude</span><span class="p">:</span>
 <span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.*/scratch/.*</span>
 <span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.*/time_point_\d+.nii.gz$</span>
 <span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.*/T1_TARG_WARP_\d+.nii.gz$</span>
 <span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.*/T1_TARG_FILE_\d+.nii.gz$</span>
 <span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.*/MNI_TARG_FILE_\d+.nii.gz$</span>
+
+<span class="w">        </span><span class="c1"># This is an optional setting to skip NIfTI</span>
+<span class="w">        </span><span class="c1"># file validation. Set this to True or False.</span>
+<span class="w">        </span><span class="nt">validate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
 </code></pre></div>
 <h2 id="container">Container</h2>
 <p><code>kilmer</code> will run all iProc commands within a <a href="https://docs.sylabs.io/guides/latest/user-guide/">Singularity</a>
