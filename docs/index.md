@@ -37,24 +37,6 @@ containers:
     # singularity container image
     wrapper: /path/to/kilmer.sif
 
-inputs:
-
-    # This is where to define your input datasets 
-    # directory. An example subject directory should 
-    # look like the following
-    #
-    # datasets/ASDF/
-    # |-- configs
-    # |   |-- cluster_requests.csv
-    # |   `-- tasktype_consolidated.csv
-    # |-- mocks
-    # |   |-- bids.tar.gz           (optional)
-    # |   `-- freesurfer.tar.gz     (optional)
-    # `-- subject_lists
-    #     |-- ASDF.cfg
-    #     `-- scanlist_ASDF.csv
-    datasets: /path/to/datasets
-
 outputs:
 
     # This is where to define where all 
@@ -62,7 +44,7 @@ outputs:
     branches: /path/to/branches
 
     # This is where to define where all
-    # iProc processed results will be saved
+    # processed results will be saved
     results:
 
         # This is where to define where results will 
@@ -76,19 +58,59 @@ outputs:
 # This is where to define your "left" branch
 left:
 
+    # This is where to specify the input datasets
+    # directory for the left branch. An example 
+    # subject directory should look like the 
+    # following
+    #
+    # datasets/left/ASDF/
+    # |-- configs
+    # |   |-- cluster_requests.csv
+    # |   `-- tasktype_consolidated.csv
+    # |-- mocks
+    # |   |-- bids.tar.gz           (optional)
+    # |   `-- freesurfer.tar.gz     (optional)
+    # `-- subject_lists
+    #     |-- ASDF.cfg
+    #     `-- scanlist_ASDF.csv
+    datasets: /path/to/datasets/left
+
+    # This should be the URL of your repository
     url: https://github.com/harvard-nrg/iProc
+
+    # This is the real branch name
     branch: main
 
 # This is where to define your "right" branch
 right:
 
+    # This is where to specify the input datasets
+    # directory for the right branch. An example 
+    # subject directory should look like the 
+    # following
+    #
+    # datasets/right/ASDF/
+    # |-- configs
+    # |   |-- cluster_requests.csv
+    # |   `-- tasktype_consolidated.csv
+    # |-- mocks
+    # |   |-- bids.tar.gz           (optional)
+    # |   `-- freesurfer.tar.gz     (optional)
+    # `-- subject_lists
+    #     |-- ASDF.cfg
+    #     `-- scanlist_ASDF.csv
+    datasets: /path/to/datasets/right
+
+    # This should be the URL of your repository
     url: https://github.com/harvard-nrg/iProc
+
+    # This should be the real branch name
     branch: develop
 
 iproc:
 
-    # These are the iProc stages you want to run 
-    # during kilmer's "launch" mode
+    # This should contain the iProc stages you 
+    # want to run during kilmer's "launch" mode
     stages:
         - setup
         - bet
@@ -118,7 +140,8 @@ validation:
             - .*/MNI_TARG_FILE_\d+.nii.gz$
 
         # This is an optional setting to skip NIfTI
-        # file validation. Set this to True or False.
+        # file validation altogether. Set this to 
+        # True or False.
         validate: True
 ```
 
@@ -126,14 +149,15 @@ validation:
 
 `kilmer` will run all iProc commands within a [Singularity][Singularity]
 container. This container has all of the required operating system 
-dependencies installed. 
+dependencies installed.
 
 !!! question "Why?"
-    The main reason for using a container is to trick iProc into thinking 
-    it's writing output to `/output`, `/output_AP`, or `/output_PA` by using 
-    Singularity `--bind` mounts. This will ensure that any strings written to 
-    any output files that contain the runtime output directory are identical, 
-    enabling more direct file comparisons.
+    There are a few reasons for using a container. The first is to ensure 
+    execution environment consistency. The other reason is to trick iProc 
+    into thinking it's writing output to `/output`, `/output_AP`, or 
+    `/output_PA` by using Singularity `--bind` mounts. This will ensure that 
+    any strings written to any output files that contain the runtime output 
+    directory are identical. This helps facilitate direct file comparisons.
 
 ### building the container
 

@@ -16,9 +16,9 @@ def launch(args):
     subject = args.subject
     branch = args.branch
     url = args.config.find_one(f'$.{branch}.url')
+    datasets = Path(args.config.find_one(f'$.{branch}.datasets'))
     branch_name = args.config.find_one(f'$.{branch}.branch')
     branches = Path(args.config.find_one('$.outputs.branches'))
-    datasets = Path(args.config.find_one('$.inputs.datasets'))
     stages = args.config.find_one('$.iproc.stages')
     overwrite = args.config.find_one('$.iproc.overwrite', default=False)
     wrapper = Path(args.config.find_one('$.containers.wrapper'))

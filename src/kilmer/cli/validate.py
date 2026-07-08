@@ -120,11 +120,13 @@ def compare_nifti_files(left_dir, right_dir, patterns):
     with contextlib.chdir(left_dir):
         files = Path().rglob('*.nii.gz')
         pbar = tqdm(list(files))
+        excluded = 0
         errors = 0
         for left_file in pbar:
-            pbar.set_description(f'{errors} errors')
+            pbar.set_description(f'{errors} errors, {excluded} excluded')
             # exclude any files matching provided patterns
             if exclude(left_file.absolute(), patterns):
+                excluded += 1
                 continue
             # expand both files to absolute paths
             right_file = Path(right_dir, left_file)
