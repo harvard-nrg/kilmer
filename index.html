@@ -747,24 +747,6 @@ pass this configuration file using the <code>-c|--config</code> argument</p>
 <span class="w">    </span><span class="c1"># singularity container image</span>
 <span class="w">    </span><span class="nt">wrapper</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/path/to/kilmer.sif</span>
 
-<span class="nt">inputs</span><span class="p">:</span>
-
-<span class="w">    </span><span class="c1"># This is where to define your input datasets </span>
-<span class="w">    </span><span class="c1"># directory. An example subject directory should </span>
-<span class="w">    </span><span class="c1"># look like the following</span>
-<span class="w">    </span><span class="c1">#</span>
-<span class="w">    </span><span class="c1"># datasets/ASDF/</span>
-<span class="w">    </span><span class="c1"># |-- configs</span>
-<span class="w">    </span><span class="c1"># |   |-- cluster_requests.csv</span>
-<span class="w">    </span><span class="c1"># |   `-- tasktype_consolidated.csv</span>
-<span class="w">    </span><span class="c1"># |-- mocks</span>
-<span class="w">    </span><span class="c1"># |   |-- bids.tar.gz           (optional)</span>
-<span class="w">    </span><span class="c1"># |   `-- freesurfer.tar.gz     (optional)</span>
-<span class="w">    </span><span class="c1"># `-- subject_lists</span>
-<span class="w">    </span><span class="c1">#     |-- ASDF.cfg</span>
-<span class="w">    </span><span class="c1">#     `-- scanlist_ASDF.csv</span>
-<span class="w">    </span><span class="nt">datasets</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/path/to/datasets</span>
-
 <span class="nt">outputs</span><span class="p">:</span>
 
 <span class="w">    </span><span class="c1"># This is where to define where all </span>
@@ -772,7 +754,7 @@ pass this configuration file using the <code>-c|--config</code> argument</p>
 <span class="w">    </span><span class="nt">branches</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/path/to/branches</span>
 
 <span class="w">    </span><span class="c1"># This is where to define where all</span>
-<span class="w">    </span><span class="c1"># iProc processed results will be saved</span>
+<span class="w">    </span><span class="c1"># processed results will be saved</span>
 <span class="w">    </span><span class="nt">results</span><span class="p">:</span>
 
 <span class="w">        </span><span class="c1"># This is where to define where results will </span>
@@ -786,19 +768,59 @@ pass this configuration file using the <code>-c|--config</code> argument</p>
 <span class="c1"># This is where to define your &quot;left&quot; branch</span>
 <span class="nt">left</span><span class="p">:</span>
 
+<span class="w">    </span><span class="c1"># This is where to specify the input datasets</span>
+<span class="w">    </span><span class="c1"># directory for the left branch. An example </span>
+<span class="w">    </span><span class="c1"># subject directory should look like the </span>
+<span class="w">    </span><span class="c1"># following</span>
+<span class="w">    </span><span class="c1">#</span>
+<span class="w">    </span><span class="c1"># datasets/left/ASDF/</span>
+<span class="w">    </span><span class="c1"># |-- configs</span>
+<span class="w">    </span><span class="c1"># |   |-- cluster_requests.csv</span>
+<span class="w">    </span><span class="c1"># |   `-- tasktype_consolidated.csv</span>
+<span class="w">    </span><span class="c1"># |-- mocks</span>
+<span class="w">    </span><span class="c1"># |   |-- bids.tar.gz           (optional)</span>
+<span class="w">    </span><span class="c1"># |   `-- freesurfer.tar.gz     (optional)</span>
+<span class="w">    </span><span class="c1"># `-- subject_lists</span>
+<span class="w">    </span><span class="c1">#     |-- ASDF.cfg</span>
+<span class="w">    </span><span class="c1">#     `-- scanlist_ASDF.csv</span>
+<span class="w">    </span><span class="nt">datasets</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/path/to/datasets/left</span>
+
+<span class="w">    </span><span class="c1"># This should be the URL of your repository</span>
 <span class="w">    </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/harvard-nrg/iProc</span>
+
+<span class="w">    </span><span class="c1"># This is the real branch name</span>
 <span class="w">    </span><span class="nt">branch</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">main</span>
 
 <span class="c1"># This is where to define your &quot;right&quot; branch</span>
 <span class="nt">right</span><span class="p">:</span>
 
+<span class="w">    </span><span class="c1"># This is where to specify the input datasets</span>
+<span class="w">    </span><span class="c1"># directory for the right branch. An example </span>
+<span class="w">    </span><span class="c1"># subject directory should look like the </span>
+<span class="w">    </span><span class="c1"># following</span>
+<span class="w">    </span><span class="c1">#</span>
+<span class="w">    </span><span class="c1"># datasets/right/ASDF/</span>
+<span class="w">    </span><span class="c1"># |-- configs</span>
+<span class="w">    </span><span class="c1"># |   |-- cluster_requests.csv</span>
+<span class="w">    </span><span class="c1"># |   `-- tasktype_consolidated.csv</span>
+<span class="w">    </span><span class="c1"># |-- mocks</span>
+<span class="w">    </span><span class="c1"># |   |-- bids.tar.gz           (optional)</span>
+<span class="w">    </span><span class="c1"># |   `-- freesurfer.tar.gz     (optional)</span>
+<span class="w">    </span><span class="c1"># `-- subject_lists</span>
+<span class="w">    </span><span class="c1">#     |-- ASDF.cfg</span>
+<span class="w">    </span><span class="c1">#     `-- scanlist_ASDF.csv</span>
+<span class="w">    </span><span class="nt">datasets</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/path/to/datasets/right</span>
+
+<span class="w">    </span><span class="c1"># This should be the URL of your repository</span>
 <span class="w">    </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/harvard-nrg/iProc</span>
+
+<span class="w">    </span><span class="c1"># This should be the real branch name</span>
 <span class="w">    </span><span class="nt">branch</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">develop</span>
 
 <span class="nt">iproc</span><span class="p">:</span>
 
-<span class="w">    </span><span class="c1"># These are the iProc stages you want to run </span>
-<span class="w">    </span><span class="c1"># during kilmer&#39;s &quot;launch&quot; mode</span>
+<span class="w">    </span><span class="c1"># This should contain the iProc stages you </span>
+<span class="w">    </span><span class="c1"># want to run during kilmer&#39;s &quot;launch&quot; mode</span>
 <span class="w">    </span><span class="nt">stages</span><span class="p">:</span>
 <span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">setup</span>
 <span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bet</span>
@@ -828,20 +850,22 @@ pass this configuration file using the <code>-c|--config</code> argument</p>
 <span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.*/MNI_TARG_FILE_\d+.nii.gz$</span>
 
 <span class="w">        </span><span class="c1"># This is an optional setting to skip NIfTI</span>
-<span class="w">        </span><span class="c1"># file validation. Set this to True or False.</span>
+<span class="w">        </span><span class="c1"># file validation altogether. Set this to </span>
+<span class="w">        </span><span class="c1"># True or False.</span>
 <span class="w">        </span><span class="nt">validate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
 </code></pre></div>
 <h2 id="container">Container</h2>
 <p><code>kilmer</code> will run all iProc commands within a <a href="https://docs.sylabs.io/guides/latest/user-guide/">Singularity</a>
 container. This container has all of the required operating system 
-dependencies installed. </p>
+dependencies installed.</p>
 <div class="admonition question">
 <p class="admonition-title">Why?</p>
-<p>The main reason for using a container is to trick iProc into thinking 
-it's writing output to <code>/output</code>, <code>/output_AP</code>, or <code>/output_PA</code> by using 
-Singularity <code>--bind</code> mounts. This will ensure that any strings written to 
-any output files that contain the runtime output directory are identical, 
-enabling more direct file comparisons.</p>
+<p>There are a few reasons for using a container. The first is to ensure 
+execution environment consistency. The other reason is to trick iProc 
+into thinking it's writing output to <code>/output</code>, <code>/output_AP</code>, or 
+<code>/output_PA</code> by using Singularity <code>--bind</code> mounts. This will ensure that 
+any strings written to any output files that contain the runtime output 
+directory are identical. This helps facilitate direct file comparisons.</p>
 </div>
 <h3 id="building-the-container">building the container</h3>
 <p>There is a Singularity definition file included within the <code>kilmer</code> repository 
