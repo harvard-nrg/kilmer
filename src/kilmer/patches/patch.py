@@ -13,7 +13,6 @@ def set_permissions(base, path, permissions):
             Path(path).chmod(permissions)
         except FileNotFoundError:
             logger.info('version of iproc >= 4.0.1 being used, continuing')
-            continue
 
 def patch_files(base, patch_dir):
     logger.info(f'switching to {base}')
