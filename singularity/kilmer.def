@@ -36,9 +36,9 @@ From: rockylinux:8
 %runscript
     source .venv/bin/activate
     source ./modules_rocky8.sh
-    $@
+    .venv/bin/python3 $@
 
 %apprun tedana
     source .tedana/bin/activate
     source ./modules_rocky8.sh
-    $@
+    .tedana/bin/python3 $@
