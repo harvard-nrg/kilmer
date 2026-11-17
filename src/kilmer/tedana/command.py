@@ -16,7 +16,6 @@ def build_commands(scanlist, tasklist, resolution, outdir):
 
 def build_command(sub, ses, task, run, space, resolution, datadir):
     cmd = [
-        'python3',
         'run_tedana.py',
         '--sub', sub,
         '--ses', ses,
